@@ -4,9 +4,9 @@ import 'package:meals/models/meal.dart';
 import 'package:meals/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({super.key, required this.title, required this.meals});
+  const MealsScreen({super.key, this.title, required this.meals});
 
-  final String title;
+  final String? title;
   final List<Meal> meals;
 
   @override
@@ -34,16 +34,20 @@ class MealsScreen extends StatelessWidget {
       ),
     );
 
+    Widget content = meals.isEmpty
+        ? fallback
+        : ListView.builder(
+            itemCount: meals.length,
+            itemBuilder: ((context, index) => MealItem(meal: meals[index])),
+          );
+
+    if (title == null) {
+      return content;
+    }
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: meals.isEmpty
-          ? fallback
-          : ListView.builder(
-              itemCount: meals.length,
-              itemBuilder: ((context, index) => MealItem(meal: meals[index])),
-            ),
-    );
+        appBar: AppBar(
+          title: Text(title!),
+        ),
+        body: content);
   }
 }
